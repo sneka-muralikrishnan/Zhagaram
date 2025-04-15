@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Traditional Foods - Tamil Culture Showcase</title>
+</head>
+<body>
+    <th:block th:replace="~{layout/main :: content(~{::section})}">
+        <section>
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <h1 class="section-title">Traditional Tamil Foods</h1>
+                    <p class="lead">Discover the rich and diverse culinary traditions of Tamil Nadu, from breakfast staples to festival specialties.</p>
+                </div>
+                <div class="col-md-4 text-md-end align-self-center">
+                    <a th:href="@{/foods/add}" class="btn btn-primary" sec:authorize="isAuthenticated()">
+                        <i class="fas fa-plus me-2"></i> Add New Food
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Category Filter -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Browse by Category</h5>
+                            <div class="d-flex flex-wrap gap-2 mt-3">
+                                <a th:href="@{/foods}" class="btn btn-sm btn-outline-primary">All</a>
+                                <a th:href="@{/foods/category/BREAKFAST}" class="btn btn-sm btn-outline-primary">Breakfast</a>
+                                <a th:href="@{/foods/category/LUNCH}" class="btn btn-sm btn-outline-primary">Lunch</a>
+                                <a th:href="@{/foods/category/DINNER}" class="btn btn-sm btn-outline-primary">Dinner</a>
+                                <a th:href="@{/foods/category/SNACK}" class="btn btn-sm btn-outline-primary">Snacks</a>
+                                <a th:href="@{/foods/category/DESSERT}" class="btn btn-sm btn-outline-primary">Desserts</a>
+                                <a th:href="@{/foods/category/BEVERAGE}" class="btn btn-sm btn-outline-primary">Beverages</a>
+                                <a th:href="@{/foods/category/FESTIVAL_FOOD}" class="btn btn-sm btn-outline-primary">Festival Foods</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Food Items -->
+            <div class="row">
+                <div class="col-md-4 mb-4" th:each="food : ${foods}">
+                    <div class="card h-100">
+                        <img th:src="${food.imageUrl != null ? food.imageUrl : '/images/food-placeholder.jpg'}" class="card-img-top" alt="Food Item">
+                        <div class="card-body">
+                            <span class="food-category mb-2" th:text="${food.category}">Category</span>
+                            <h5 class="card-title" th:text="${food.name}">Food Name</h5>
+                            <p class="card-text" th:text="${#strings.abbreviate(food.description, 150)}">Description</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-top-0">
+                            <a th:href="@{/foods/{id}(id=${food.id})}" class="btn btn-sm btn-primary">View Recipe</a>
+                            <a th:href="@{/foods/edit/{id}(id=${food.id})}" class="btn btn-sm btn-outline-secondary" 
+                               sec:authorize="hasRole('ROLE_ADMIN')" th:if="${food.createdBy != null && #authentication.name == food.createdBy.username}">
+                                Edit
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Empty State -->
+                <div class="col-12 text-center py-5" th:if="${#lists.isEmpty(foods)}">
+                    <div class="py-5">
+                        <i class="fas fa-utensils fa-4x text-muted mb-3"></i>
+                        <h3>No food items found</h3>
+                        <p class="text-muted">Be the first to add a traditional Tamil food item!</p>
+                        <a th:href="@{/foods/add}" class="btn btn-primary mt-3" sec:authorize="isAuthenticated()">
+                            Add New Food
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </th:block>
+</body>
+</html>

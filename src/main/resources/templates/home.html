@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Home - Tamil Culture Showcase</title>
+</head>
+<body>
+    <th:block th:replace="~{layout/main :: content(~{::section})}">
+        <section>
+            <!-- Hero Section -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="card border-0">
+                        <img th:src="@{/images/hero-banner.jpg}" class="card-img" alt="Tamil Culture" style="height: 400px; object-fit: cover;">
+                        <div class="card-img-overlay d-flex flex-column justify-content-center text-white" style="background-color: rgba(0,0,0,0.5);">
+                            <div class="container">
+                                <h1 class="display-4 fw-bold">Discover Tamil Culture</h1>
+                                <p class="lead">Explore the rich heritage, traditions, arts, and cuisine of Tamil culture</p>
+                                <div class="mt-4">
+                                    <a th:href="@{/gallery}" class="btn btn-primary me-2">Explore Gallery</a>
+                                    <a th:href="@{/register}" class="btn btn-outline-light" sec:authorize="!isAuthenticated()">Join Community</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Featured Cultural Items -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h2 class="section-title">Cultural Gallery</h2>
+                </div>
+                <div class="col-md-3 mb-4" th:each="item : ${featuredItems}">
+                    <div class="card h-100">
+                        <img th:src="${item.imageUrl != null ? item.imageUrl : '/images/placeholder.jpg'}" class="card-img-top" alt="Cultural Item">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${item.title}">Cultural Item Title</h5>
+                            <p class="card-text" th:text="${#strings.abbreviate(item.description, 100)}">Description</p>
+                            <a th:href="@{/gallery/{id}(id=${item.id})}" class="btn btn-sm btn-outline-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 text-center mt-3">
+                    <a th:href="@{/gallery}" class="btn btn-primary">View All Cultural Items</a>
+                </div>
+            </div>
+            
+            <!-- Traditional Foods -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h2 class="section-title">Traditional Foods</h2>
+                </div>
+                <div class="col-md-3 mb-4" th:each="food : ${featuredFoods}">
+                    <div class="card h-100">
+                        <img th:src="${food.imageUrl != null ? food.imageUrl : '/images/food-placeholder.jpg'}" class="card-img-top" alt="Food Item">
+                        <div class="card-body">
+                            <span class="food-category mb-2" th:text="${food.category}">Category</span>
+                            <h5 class="card-title" th:text="${food.name}">Food Name</h5>
+                            <p class="card-text" th:text="${#strings.abbreviate(food.description, 100)}">Description</p>
+                            <a th:href="@{/foods/{id}(id=${food.id})}" class="btn btn-sm btn-outline-primary">View Recipe</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 text-center mt-3">
+                    <a th:href="@{/foods}" class="btn btn-primary">Explore All Foods</a>
+                </div>
+            </div>
+            
+            <!-- Culture Quiz Promo -->
+            <div class="row mb-5">
+                <div class="col-md-6">
+                    <div class="card bg-light border-0">
+                        <div class="card-body p-4">
+                            <h2 class="card-title">Test Your Knowledge</h2>
+                            <p class="card-text">Challenge yourself with our Tamil culture quiz. Learn interesting facts about history, arts, literature, and traditions.</p>
+                            <a th:href="@{/quiz}" class="btn btn-primary">Take Quiz</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card bg-light border-0">
+                        <div class="card-body p-4">
+                            <h2 class="card-title">Join the Discussion</h2>
+                            <p class="card-text">Connect with others interested in Tamil culture. Share your thoughts, ask questions, and participate in discussions.</p>
+                            <a th:href="@{/forum}" class="btn btn-primary">Visit Forum</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Forum Posts -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h2 class="section-title">Recent Discussions</h2>
+                </div>
+                <div class="col-12">
+                    <div class="list-group">
+                        <a th:href="@{/forum/{id}(id=${post.id})}" class="list-group-item list-group-item-action" th:each="post : ${recentPosts}">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1" th:text="${post.title}">Post Title</h5>
+                                <small th:text="${#temporals.format(post.createdAt, 'dd MMM yyyy')}">Date</small>
+                            </div>
+                            <p class="mb-1" th:text="${#strings.abbreviate(post.content, 150)}">Post content...</p>
+                            <small>By <span th:text="${post.author.username}">username</span></small>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </th:block>
+</body>
+</html>

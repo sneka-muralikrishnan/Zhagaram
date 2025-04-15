@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Discussion Forum - Tamil Culture Showcase</title>
+</head>
+<body>
+    <th:block th:replace="~{layout/main :: content(~{::section})}">
+        <section>
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <h1 class="section-title">Discussion Forum</h1>
+                    <p class="lead">Connect with others interested in Tamil culture. Share your thoughts, ask questions, and participate in discussions.</p>
+                </div>
+                <div class="col-md-4 text-md-end align-self-center">
+                    <a th:href="@{/forum/new}" class="btn btn-primary" sec:authorize="isAuthenticated()">
+                        <i class="fas fa-plus me-2"></i> New Discussion
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Forum Posts -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card mb-3" th:each="post : ${posts}">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="card-title mb-0">
+                                    <a th:href="@{/forum/{id}(id=${post.id})}" th:text="${post.title}">Post Title</a>
+                                </h5>
+                                <span class="badge bg-secondary" th:text="${#temporals.format(post.createdAt, 'dd MMM yyyy')}">Date</span>
+                            </div>
+                            <p class="card-text" th:text="${#strings.abbreviate(post.content, 200)}">Post content...</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <small class="text-muted">
+                                        <i class="fas fa-user me-1"></i> 
+                                        <span th:text="${post.author.username}">Username</span>
+                                    </small>
+                                    <small class="text-muted ms-3">
+                                        <i class="fas fa-comment me-1"></i> 
+                                        <span th:text="${post.comments.size()}">0</span> comments
+                                    </small>
+                                </div>
+                                <a th:href="@{/forum/{id}(id=${post.id})}" class="btn btn-sm btn-outline-primary">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Empty State -->
+                    <div class="text-center py-5" th:if="${#lists.isEmpty(posts)}">
+                        <div class="py-5">
+                            <i class="fas fa-comments fa-4x text-muted mb-3"></i>
+                            <h3>No discussions yet</h3>
+                            <p class="text-muted">Be the first to start a discussion about Tamil culture!</p>
+                            <a th:href="@{/forum/new}" class="btn btn-primary mt-3" sec:authorize="isAuthenticated()">
+                                Start New Discussion
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </th:block>
+</body>
+</html>
