@@ -7,7 +7,7 @@ trigger:
   - main  # or the branch you want to trigger this on
 
 pool:
-  Azure Pipelines: 'Hosted Agent'
+  'Test'
 
 steps:
   - task: Maven@3
