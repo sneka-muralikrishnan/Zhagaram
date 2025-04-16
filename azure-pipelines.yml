@@ -16,7 +16,7 @@ steps:
       goals: 'clean test'
       options: ''
       javaHomeOption: 'JDKVersion'
-      jdkVersionOption: '1.17'  # or 1.11 / 1.8 if you're using a different Java version
+      jdkVersionOption: '1.21'  # or 1.11 / 1.8 if you're using a different Java version
       mavenVersionOption: 'Default'
       mavenAuthenticateFeed: false
     displayName: 'Run Maven Tests'
