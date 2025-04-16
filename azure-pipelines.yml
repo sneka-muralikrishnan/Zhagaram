@@ -1,0 +1,30 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  - main  # or the branch you want to trigger this on
+
+pool:
+  Azure Pipelines: 'Hosted Agent'
+
+steps:
+  - task: Maven@3
+    inputs:
+      mavenPomFile: 'pom.xml'
+      goals: 'clean test'
+      options: ''
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: '1.17'  # or 1.11 / 1.8 if you're using a different Java version
+      mavenVersionOption: 'Default'
+      mavenAuthenticateFeed: false
+    displayName: 'Run Maven Tests'
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFiles: '**/target/surefire-reports/TEST-*.xml'
+      testResultsFormat: 'JUnit'
+      failTaskOnFailedTests: true
+    condition: succeededOrFailed()
+    displayName: 'Publish Test Results'
